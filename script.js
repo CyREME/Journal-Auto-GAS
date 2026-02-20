@@ -1,5 +1,12 @@
 const doc = DocumentApp.getActiveDocument();
 
+const CONFIG = {
+  dateDebut : new Date("2026-01-05"),
+  dateFin : new Date("2026-02-20"),
+  joursExclus : [6, 7]
+}
+
+
 function dicIdTab() {
 
   let dict = {}
@@ -188,10 +195,19 @@ function creationSommaire() {
 
 
 function main() {
-  let dt = new Date().getDay();
+  let aujourdhui = new Date();
+  let jourSemaine = aujourdhui.getDay(); // 0 (dim) à 6 (sam)
 
-  if (dt == 0 || dt == 6){
-    return ;
+  // Correction : Comparer le temps (getTime) pour les dates
+  if (aujourdhui.getTime() < CONFIG.dateDebut.getTime() || aujourdhui.getTime() > CONFIG.dateFin.getTime()) {
+    console.log("Hors période");
+    return;
+  }
+  
+  // Attention : .getDay() renvoie 0 pour Dimanche, vérifie ton tableau joursExclus
+  if (CONFIG.joursExclus.includes(jourSemaine)) {
+    console.log("Jour exclu");
+    return;
   }
   
   creerOngletDate();
